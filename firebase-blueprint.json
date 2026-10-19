@@ -1,0 +1,112 @@
+{
+  "entities": {
+    "User": {
+      "title": "User",
+      "description": "User profile with role-based access information",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "maxLength": 128 },
+        "email": { "type": "string", "maxLength": 256 },
+        "displayName": { "type": "string", "maxLength": 128 },
+        "role": { "type": "string", "enum": ["customer", "admin", "delivery"] },
+        "phone": { "type": "string", "maxLength": 32 },
+        "hostelBlock": { "type": "string", "maxLength": 64 },
+        "roomNumber": { "type": "string", "maxLength": 32 },
+        "isApproved": { "type": "boolean" },
+        "createdAt": { "type": "string" },
+        "updatedAt": { "type": "string" }
+      },
+      "required": ["id", "email", "role"]
+    },
+    "Product": {
+      "title": "Product",
+      "description": "Product sold in the Ravindra Pro shop",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "maxLength": 128 },
+        "name": { "type": "string", "maxLength": 128 },
+        "description": { "type": "string", "maxLength": 1000 },
+        "price": { "type": "number" },
+        "category": { "type": "string", "maxLength": 64 },
+        "imageUrl": { "type": "string", "maxLength": 1024 },
+        "stock": { "type": "number" },
+        "isAvailable": { "type": "boolean" },
+        "createdAt": { "type": "string" },
+        "updatedAt": { "type": "string" }
+      },
+      "required": ["id", "name", "price", "stock", "category"]
+    },
+    "Order": {
+      "title": "Order",
+      "description": "Hostel student order record",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "maxLength": 128 },
+        "customerId": { "type": "string", "maxLength": 128 },
+        "customerName": { "type": "string", "maxLength": 128 },
+        "customerEmail": { "type": "string", "maxLength": 256 },
+        "customerPhone": { "type": "string", "maxLength": 32 },
+        "hostelBlock": { "type": "string", "maxLength": 64 },
+        "hostelRoom": { "type": "string", "maxLength": 32 },
+        "instructions": { "type": "string", "maxLength": 500 },
+        "subtotal": { "type": "number" },
+        "deliveryFee": { "type": "number" },
+        "total": { "type": "number" },
+        "status": {
+          "type": "string",
+          "enum": ["pending", "accepted", "rejected", "assigned", "picked_up", "out_for_delivery", "delivered", "cancelled"]
+        },
+        "paymentMethod": { "type": "string", "enum": ["cod", "online"] },
+        "paymentStatus": { "type": "string", "enum": ["pending", "completed"] },
+        "assignedDeliveryManId": { "type": "string", "maxLength": 128 },
+        "assignedDeliveryManName": { "type": "string", "maxLength": 128 },
+        "deliveryNotes": { "type": "string", "maxLength": 500 },
+        "deliveredAt": { "type": "string" },
+        "createdAt": { "type": "string" },
+        "updatedAt": { "type": "string" },
+        "cancellationReason": { "type": "string", "maxLength": 300 }
+      },
+      "required": ["id", "customerId", "hostelRoom", "total", "status"]
+    },
+    "DeliveryAssignment": {
+      "title": "DeliveryAssignment",
+      "description": "Assignment link between an order and a delivery agent",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "maxLength": 128 },
+        "orderId": { "type": "string", "maxLength": 128 },
+        "deliveryManId": { "type": "string", "maxLength": 128 },
+        "deliveryManName": { "type": "string", "maxLength": 128 },
+        "customerName": { "type": "string", "maxLength": 128 },
+        "hostelRoom": { "type": "string", "maxLength": 32 },
+        "hostelBlock": { "type": "string", "maxLength": 64 },
+        "status": {
+          "type": "string",
+          "enum": ["assigned", "picked_up", "out_for_delivery", "delivered"]
+        },
+        "assignedAt": { "type": "string" },
+        "deliveredAt": { "type": "string" },
+        "notes": { "type": "string", "maxLength": 500 }
+      },
+      "required": ["id", "orderId", "deliveryManId", "status"]
+    }
+  },
+  "firestore": {
+    "/users/{userId}": {
+      "schema": "User",
+      "description": "User profiles with role and hostel room details"
+    },
+    "/products/{productId}": {
+      "schema": "Product",
+      "description": "Product catalog and inventory quantities"
+    },
+    "/orders/{orderId}": {
+      "schema": "Order",
+      "description": "Student orders with status, pricing, and assigned delivery info"
+    },
+    "/deliveryAssignments/{assignmentId}": {
+      "schema": "DeliveryAssignment",
+      "description": "Active and past deliveries assigned to delivery personnel"
+    }
+  }
+}

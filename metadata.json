@@ -1,0 +1,6 @@
+{
+  "name": "Ravindra Pro Orders",
+  "description": "A modern, mobile-friendly online ordering and delivery app for hostel students, shop owners, and delivery staff.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

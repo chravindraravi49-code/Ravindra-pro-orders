@@ -1,0 +1,59 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // Common helper functions
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    function isAdmin() {
+      return isSignedIn() && (
+        (request.auth.token.email != null && request.auth.token.email == 'chravindraravi49@gmail.com') ||
+        (exists(/databases/$(database)/documents/users/$(request.auth.uid)) &&
+         get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'admin')
+      );
+    }
+
+    // ---------------------------------------------
+    // PRODUCTS COLLECTION
+    // ---------------------------------------------
+    match /products/{productId} {
+      // Products catalog is readable by anyone so storefront loads seamlessly
+      allow read, get, list: if true;
+      allow write: if true;
+    }
+
+    // ---------------------------------------------
+    // USERS COLLECTION
+    // ---------------------------------------------
+    match /users/{userId} {
+      allow read, write: if true;
+    }
+
+    // ---------------------------------------------
+    // ORDERS COLLECTION
+    // ---------------------------------------------
+    match /orders/{orderId} {
+      allow read, get, list: if true;
+      allow write: if true;
+    }
+
+    // ---------------------------------------------
+    // DELIVERY ASSIGNMENTS COLLECTION
+    // ---------------------------------------------
+    match /deliveryAssignments/{assignmentId} {
+      allow read, write: if true;
+    }
+
+    // Test connection document
+    match /test/{docId} {
+      allow read, write: if true;
+    }
+
+    // Fallback catch-all
+    match /{document=**} {
+      allow read, write: if true;
+    }
+  }
+}
